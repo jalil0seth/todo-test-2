@@ -12,8 +12,12 @@ interface TaskActionsProps {
 }
 
 export function TaskActions({ task, onUpdate, onArchive }: TaskActionsProps) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className="flex items-start justify-between">
+    <div className="flex items-start justify-between" onClick={handleClick}>
       <div>
         <h2 className="text-2xl font-bold">{task.title}</h2>
         <div className="flex gap-2 mt-2">
@@ -33,7 +37,10 @@ export function TaskActions({ task, onUpdate, onArchive }: TaskActionsProps) {
       </div>
       <div className="flex items-center gap-2">
         <button
-          onClick={() => onUpdate({ ...task, completed: !task.completed })}
+          onClick={(e) => {
+            e.stopPropagation();
+            onUpdate({ ...task, completed: !task.completed });
+          }}
           className="flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100"
         >
           {task.completed ? (
@@ -44,7 +51,10 @@ export function TaskActions({ task, onUpdate, onArchive }: TaskActionsProps) {
           {task.completed ? 'Completed' : 'Mark Complete'}
         </button>
         <button
-          onClick={() => onArchive(task.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onArchive(task.id);
+          }}
           className="flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100"
         >
           <Archive size={16} /> Archive

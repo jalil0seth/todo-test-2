@@ -13,9 +13,10 @@ interface TaskModalContentProps {
   onUpdate: (task: Task) => void;
   onArchive: (taskId: string) => void;
   onClose: () => void;
+  onEdit: () => void;
 }
 
-export function TaskModalContent({ task, onUpdate, onArchive, onClose }: TaskModalContentProps) {
+export function TaskModalContent({ task, onUpdate, onArchive, onClose, onEdit }: TaskModalContentProps) {
   const [activeTab, setActiveTab] = React.useState('details');
 
   const handleAddSubtask = (title: string) => {
@@ -59,12 +60,11 @@ export function TaskModalContent({ task, onUpdate, onArchive, onClose }: TaskMod
   ];
 
   return (
-    <div className="space-y-6" onClick={(e) => e.stopPropagation()}>
+    <div className="space-y-6">
       <TaskActions
         task={task}
         onUpdate={onUpdate}
         onArchive={onArchive}
-        onClose={onClose}
       />
       
       <TagInput tags={task.tags || []} onChange={handleUpdateTags} />

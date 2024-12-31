@@ -16,13 +16,16 @@ interface TabViewProps {
 
 export function TabView({ tabs, activeTab, onTabChange, children }: TabViewProps) {
   return (
-    <div>
+    <div onClick={e => e.stopPropagation()}>
       <div className="border-b">
         <div className="flex gap-4">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => onTabChange(tab.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onTabChange(tab.id);
+              }}
               className={clsx(
                 'flex items-center gap-2 px-4 py-2 font-medium text-sm transition-colors',
                 activeTab === tab.id

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Task, Priority, TimeFrame } from '../types/task';
-import { Edit2, Save, X, Eye, EyeOff } from 'lucide-react';
+import { Save, X, Eye, EyeOff } from 'lucide-react';
 import { MarkdownPreview } from './MarkdownPreview';
 import { PrioritySelect } from './PrioritySelect';
 import { TimeFrameSelect } from './TimeFrameSelect';
@@ -17,11 +17,12 @@ export function TaskEditor({ task, onSave, onCancel }: TaskEditorProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     onSave(editedTask);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" onClick={(e) => e.stopPropagation()}>
       <div className="space-y-2">
         <label htmlFor="title" className="block text-sm font-medium text-gray-700">
           Title
@@ -49,18 +50,18 @@ export function TaskEditor({ task, onSave, onCancel }: TaskEditorProps) {
           >
             {showPreview ? (
               <>
-                <Edit2 size={16} /> Edit
+                <EyeOff size={16} /> Hide Preview
               </>
             ) : (
               <>
-                <Eye size={16} /> Preview
+                <Eye size={16} /> Show Preview
               </>
             )}
           </button>
         </div>
         
         {showPreview ? (
-          <div className="min-h-[300px] p-4 border rounded-lg bg-gray-50">
+          <div className="min-h-[200px] p-4 border rounded-lg bg-gray-50">
             <MarkdownPreview content={editedTask.description} />
           </div>
         ) : (
@@ -68,7 +69,7 @@ export function TaskEditor({ task, onSave, onCancel }: TaskEditorProps) {
             id="description"
             value={editedTask.description}
             onChange={(e) => setEditedTask({ ...editedTask, description: e.target.value })}
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[300px] font-mono"
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[200px] font-mono"
             placeholder="Task description (supports markdown)&#10;&#10;# Heading&#10;- List item&#10;- [ ] Task&#10;```code block```"
           />
         )}
@@ -90,11 +91,14 @@ export function TaskEditor({ task, onSave, onCancel }: TaskEditorProps) {
           type="submit"
           className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
         >
-          <Save size={18} /> Save Task
+          <Save size={18} /> Save Changes
         </button>
         <button
           type="button"
-          onClick={onCancel}
+          onClick={(e) => {
+            e.stopPropagation();
+            onCancel();
+          }}
           className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
         >
           <X size={18} /> Cancel

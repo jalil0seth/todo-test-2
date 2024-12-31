@@ -13,6 +13,7 @@ export function Comments({ comments, onAddComment }: CommentsProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     if (newComment.trim()) {
       onAddComment(newComment);
       setNewComment('');
@@ -20,7 +21,7 @@ export function Comments({ comments, onAddComment }: CommentsProps) {
   };
 
   return (
-    <div className="mt-6">
+    <div className="mt-6" onClick={e => e.stopPropagation()}>
       <h3 className="text-lg font-semibold mb-4">Comments</h3>
       <div className="space-y-4 mb-4">
         {comments.map((comment) => (
@@ -36,12 +37,17 @@ export function Comments({ comments, onAddComment }: CommentsProps) {
         <input
           type="text"
           value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
+          onChange={(e) => {
+            e.stopPropagation();
+            setNewComment(e.target.value);
+          }}
+          onClick={e => e.stopPropagation()}
           placeholder="Add a comment..."
           className="flex-1 px-3 py-2 border rounded-md"
         />
         <button
           type="submit"
+          onClick={e => e.stopPropagation()}
           className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center gap-2"
         >
           <Send size={16} />

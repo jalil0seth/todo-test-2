@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Task } from '../types/task';
 import { Modal } from './Modal';
 import { TaskModalContent } from './task/TaskModalContent';
@@ -17,36 +17,46 @@ export function TaskModal({ task, isOpen, onClose, onUpdate, onArchive }: TaskMo
 
   if (!task) return null;
 
-  if (isEditing) {
-    return (
-      <Modal
-        isOpen={isOpen}
-        onClose={() => setIsEditing(false)}
-        title="Edit Task"
-      >
-        <TaskEditor
-          task={task}
-          onSave={(updatedTask) => {
-            onUpdate(updatedTask);
-            setIsEditing(false);
-          }}
-          onCancel={() => setIsEditing(false)}
-        />
-      </Modal>
-    );
-  }
+  const handleEdit = useCallback(() => {
+    setIsEditing(true);
+  }, []);
+
+  const handleUpdate = useCallback((updatedTask: Task) => {
+    onUpdate(updatedTask);
+  }, [onUpdate]);
+
+  const handleSave = useCallback((updatedTask: Task) => {
+    handleUpdate(updatedTask);
+    setIsEditing(false);
+  }, [handleUpdate]);
+
+  const handleCancel = useCallback(() => {
+    setIsEditing(false);
+  }, []);
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
+      title={isEditing ? "Edit Task" : undefined}
+      onEdit={!isEditing ? handleEdit : undefined}
+      isEditing={isEditing}
     >
-      <TaskModalContent
-        task={task}
-        onUpdate={onUpdate}
-        onArchive={onArchive}
-        onClose={onClose}
-      />
+      {isEditing ? (
+        <TaskEditor
+          task={task}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      ) : (
+        <TaskModalContent
+          task={task}
+          onUpdate={handleUpdate}
+          onArchive={onArchive}
+          onClose={onClose}
+          onEdit={handleEdit}
+        />
+      )}
     </Modal>
   );
 }
