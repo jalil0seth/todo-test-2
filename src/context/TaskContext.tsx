@@ -79,9 +79,11 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       const [removed] = result.splice(startIndex, 1);
       result.splice(endIndex, 0, removed);
       
+      // Only update order, not rank (let priority determine rank)
       return result.map((task, index) => ({
         ...task,
-        order: index
+        order: index,
+        rank: calculateTaskRank(task) // Recalculate rank based on priority
       }));
     });
   };
@@ -111,12 +113,8 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       return matchesTimeFrame && matchesStatus && matchesSearch;
     })
     .sort((a, b) => {
-      // First sort by rank
-      if (a.rank !== b.rank) {
-        return b.rank - a.rank;
-      }
-      // Then by manual order
-      return a.order - b.order;
+      // Sort primarily by rank (which is now heavily weighted by priority)
+      return b.rank - a.rank;
     });
 
   return (

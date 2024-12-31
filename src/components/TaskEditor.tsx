@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Task, Priority, TimeFrame } from '../types/task';
-import { Save, X, Eye, EyeOff, Plus } from 'lucide-react';
+import { Task } from '../types/task';
+import { Save, X, FileText, ListChecks, MessageSquare } from 'lucide-react';
 import { MarkdownPreview } from './MarkdownPreview';
 import { PrioritySelect } from './PrioritySelect';
 import { TimeFrameSelect } from './TimeFrameSelect';
@@ -8,28 +8,26 @@ import { TagInput } from './TagInput';
 import { SubtaskList } from './task/SubtaskList';
 import { Comments } from './Comments';
 import { TabView } from './TabView';
-import { ListChecks, MessageSquare, FileText } from 'lucide-react';
 
 interface TaskEditorProps {
   task: Task;
   onSave: (updatedTask: Task) => void;
   onCancel: () => void;
+  showPreview?: boolean;
 }
 
-export function TaskEditor({ task, onSave, onCancel }: TaskEditorProps) {
+export function TaskEditor({ 
+  task, 
+  onSave, 
+  onCancel,
+  showPreview = true
+}: TaskEditorProps) {
   const [editedTask, setEditedTask] = useState(task);
-  const [showPreview, setShowPreview] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
-  };
-
-  const handleSave = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onSave(editedTask);
   };
 
   return (
@@ -55,7 +53,10 @@ export function TaskEditor({ task, onSave, onCancel }: TaskEditorProps) {
         />
       </div>
 
-      <TagInput tags={editedTask.tags || []} onChange={(tags) => setEditedTask({ ...editedTask, tags })} />
+      <TagInput 
+        tags={editedTask.tags || []} 
+        onChange={(tags) => setEditedTask({ ...editedTask, tags })} 
+      />
 
       <TabView
         tabs={[
@@ -68,37 +69,18 @@ export function TaskEditor({ task, onSave, onCancel }: TaskEditorProps) {
       >
         {activeTab === 'details' && (
           <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <label className="text-sm text-gray-600">Description</label>
-              <button
-                type="button"
-                onClick={() => setShowPreview(!showPreview)}
-                className="text-xs text-[#ff6600] hover:text-[#ff7711] flex items-center gap-1"
-              >
-                {showPreview ? (
-                  <>
-                    <EyeOff size={14} /> Hide Preview
-                  </>
-                ) : (
-                  <>
-                    <Eye size={14} /> Show Preview
-                  </>
-                )}
-              </button>
-            </div>
-            
-            {showPreview ? (
-              <div className="min-h-[200px] p-3 border rounded-lg bg-gray-50">
-                <MarkdownPreview content={editedTask.description} />
-              </div>
-            ) : (
+            <label className="text-sm text-gray-600">Description (Markdown)</label>
+            <div className="grid grid-cols-2 gap-4">
               <textarea
                 value={editedTask.description}
                 onChange={(e) => setEditedTask({ ...editedTask, description: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-[#ff6600]/20 focus:border-[#ff6600] min-h-[200px] text-sm font-mono"
                 placeholder="Task description (markdown supported)"
               />
-            )}
+              <div className="min-h-[200px] p-3 border rounded-lg bg-gray-50">
+                <MarkdownPreview content={editedTask.description} />
+              </div>
+            </div>
           </div>
         )}
         {activeTab === 'subtasks' && (
@@ -140,7 +122,7 @@ export function TaskEditor({ task, onSave, onCancel }: TaskEditorProps) {
       <div className="flex gap-2 pt-2">
         <button
           type="button"
-          onClick={handleSave}
+          onClick={() => onSave(editedTask)}
           className="btn btn-primary"
         >
           <Save size={16} /> Save

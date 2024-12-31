@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTaskContext } from '../context/TaskContext';
 import { Task } from '../types/task';
 import { createEmptyTask } from '../utils/taskUtils';
-import { sortTasksByPriority } from '../utils/taskSorting';
 import { DraggableTaskList } from './task/DraggableTaskList';
 import { TaskListHeader } from './task/TaskListHeader';
 import { TaskEditor } from './TaskEditor';
 
 export function TaskList() {
-  const { filteredTasks, addTask, updateTask, reorderTasks } = useTaskContext();
+  const { filteredTasks, addTask, updateTask, reorderTasks, filterByTimeFrame } = useTaskContext();
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+
+  // Set default filter to 'today' on component mount
+  useEffect(() => {
+    filterByTimeFrame('today');
+  }, []);
 
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
     reorderTasks(result.source.index, result.destination.index);
   };
-
-  const sortedTasks = sortTasksByPriority(filteredTasks);
 
   return (
     <div className="space-y-6">
@@ -32,12 +34,13 @@ export function TaskList() {
               setIsAddingTask(false);
             }}
             onCancel={() => setIsAddingTask(false)}
+            showPreview={true}
           />
         </div>
       )}
 
       <DraggableTaskList
-        tasks={sortedTasks}
+        tasks={filteredTasks}
         onDragEnd={handleDragEnd}
         editingTask={editingTask}
         onEdit={setEditingTask}
