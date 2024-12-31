@@ -42,6 +42,15 @@ export function TaskModalContent({ task, onUpdate, onArchive, onClose, onEdit }:
     });
   };
 
+  const handleUpdateSubtask = (subtaskId: string, title: string) => {
+    onUpdate({
+      ...task,
+      subtasks: (task.subtasks || []).map(st =>
+        st.id === subtaskId ? { ...st, title } : st
+      )
+    });
+  };
+
   const handleAddComment = (content: string) => {
     onUpdate({
       ...task,
@@ -77,6 +86,7 @@ export function TaskModalContent({ task, onUpdate, onArchive, onClose, onEdit }:
             onAdd={handleAddSubtask}
             onToggle={handleToggleSubtask}
             onDelete={handleDeleteSubtask}
+            onUpdate={handleUpdateSubtask}
           />
         )}
         {activeTab === 'comments' && (

@@ -3,13 +3,21 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-size: 16px;
+    background-color: #f6f6ef;
+    color: #2c3e50;
+  }
+
   body {
-    @apply text-gray-900 bg-gray-100;
+    @apply m-0 p-0;
   }
 }
 
 .prose {
-  @apply max-w-none;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .prose p {
@@ -18,44 +26,29 @@
 
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
   @apply font-bold my-3;
+  font-size: 1.1rem;
 }
 
-.prose ul {
-  @apply list-disc list-inside;
+.btn {
+  @apply px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200;
 }
 
-.prose ol {
-  @apply list-decimal list-inside;
+.btn-primary {
+  @apply bg-[#ff6600] text-white hover:bg-[#ff7711] active:bg-[#ff5500];
 }
 
-.prose code {
-  @apply bg-gray-100 px-1 rounded font-mono text-sm;
+.btn-secondary {
+  @apply bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300;
 }
 
-.prose pre {
-  @apply bg-gray-100 p-3 rounded-lg my-3 overflow-x-auto;
+.input {
+  @apply px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-[#ff6600] focus:border-[#ff6600] outline-none transition-all duration-200;
 }
 
-.prose blockquote {
-  @apply border-l-4 border-gray-300 pl-4 italic;
+.modal {
+  @apply bg-white rounded-xl shadow-xl border border-gray-200;
 }
 
-.prose table {
-  @apply w-full border-collapse my-3;
-}
-
-.prose th, .prose td {
-  @apply border border-gray-300 px-3 py-2;
-}
-
-.prose th {
-  @apply bg-gray-50;
-}
-
-.prose img {
-  @apply rounded-lg max-w-full my-3;
-}
-
-.prose a {
-  @apply text-blue-600 hover:text-blue-700 underline;
+.card {
+  @apply bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200;
 }

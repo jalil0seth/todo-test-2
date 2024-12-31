@@ -1,6 +1,6 @@
 import React from 'react';
 import { Task } from '../types/task';
-import { CheckCircle, Circle, MessageSquare, ListChecks } from 'lucide-react';
+import { CheckCircle, Circle, MessageSquare, ListChecks, Calendar } from 'lucide-react';
 import { clsx } from 'clsx';
 import { priorityColors, calculateSubtaskProgress } from '../utils/taskUtils';
 
@@ -11,7 +11,6 @@ interface TaskItemProps {
 }
 
 export function TaskItem({ task, onClick, onToggleComplete }: TaskItemProps) {
-  // Ensure subtasks is defined with a default empty array
   const subtasks = task.subtasks ?? [];
   const completedSubtasks = subtasks.filter(st => st.completed).length;
   const subtaskProgress = calculateSubtaskProgress(subtasks);
@@ -19,10 +18,7 @@ export function TaskItem({ task, onClick, onToggleComplete }: TaskItemProps) {
   return (
     <div
       onClick={onClick}
-      className={clsx(
-        'p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer',
-        task.completed && 'opacity-75'
-      )}
+      className="p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-pointer group"
     >
       <div className="flex items-start gap-3">
         <button
@@ -33,37 +29,44 @@ export function TaskItem({ task, onClick, onToggleComplete }: TaskItemProps) {
           className="mt-1"
         >
           {task.completed ? (
-            <CheckCircle className="text-green-500" />
+            <CheckCircle size={20} className="text-[#ff6600]" />
           ) : (
-            <Circle className="text-gray-400" />
+            <Circle size={20} className="text-gray-400 group-hover:text-[#ff6600]" />
           )}
         </button>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <h3 className={clsx(
-            'text-lg font-medium',
+            'text-base font-medium leading-snug mb-2',
             task.completed && 'line-through text-gray-500'
           )}>
             {task.title}
           </h3>
-          <div className="mt-2 flex gap-2 items-center">
+          <div className="flex flex-wrap gap-3 items-center text-sm text-gray-600">
             <span className={clsx(
-              'px-2 py-1 rounded-full text-xs font-medium',
+              'px-2 py-1 rounded-md font-medium',
               priorityColors[task.priority]
             )}>
               {task.priority}
             </span>
+            <span className="flex items-center gap-1">
+              <Calendar size={16} className="text-gray-400" />
+              {task.timeFrame}
+            </span>
             {(task.comments?.length ?? 0) > 0 && (
-              <span className="flex items-center gap-1 text-xs text-gray-500">
-                <MessageSquare size={14} />
+              <span className="flex items-center gap-1">
+                <MessageSquare size={16} className="text-gray-400" />
                 {task.comments?.length}
               </span>
             )}
             {subtasks.length > 0 && (
-              <span className="flex items-center gap-1 text-xs text-gray-500">
-                <ListChecks size={14} />
-                {completedSubtasks}/{subtasks.length} ({subtaskProgress}%)
+              <span className="flex items-center gap-1">
+                <ListChecks size={16} className="text-gray-400" />
+                {completedSubtasks}/{subtasks.length}
               </span>
             )}
+            {task.tags?.map(tag => (
+              <span key={tag} className="text-[#ff6600]">#{tag}</span>
+            ))}
           </div>
         </div>
       </div>

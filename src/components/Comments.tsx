@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Comment } from '../types/task';
 import { format } from 'date-fns';
 import { Send } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface CommentsProps {
   comments: Comment[];
@@ -37,7 +38,9 @@ export function Comments({ comments, onAddComment }: CommentsProps) {
       <div className="space-y-4 mb-4">
         {comments.map((comment) => (
           <div key={comment.id} className="bg-gray-50 p-3 rounded-lg">
-            <p className="text-sm">{comment.content}</p>
+            <div className="prose prose-sm">
+              <ReactMarkdown>{comment.content}</ReactMarkdown>
+            </div>
             <p className="text-xs text-gray-500 mt-1">
               {format(new Date(comment.createdAt), 'MMM d, yyyy HH:mm')}
             </p>
@@ -45,8 +48,7 @@ export function Comments({ comments, onAddComment }: CommentsProps) {
         ))}
       </div>
       <div className="flex gap-2">
-        <input
-          type="text"
+        <textarea
           value={newComment}
           onChange={(e) => {
             e.stopPropagation();
@@ -54,13 +56,13 @@ export function Comments({ comments, onAddComment }: CommentsProps) {
           }}
           onKeyDown={handleKeyDown}
           onClick={e => e.stopPropagation()}
-          placeholder="Add a comment..."
-          className="flex-1 px-3 py-2 border rounded-md"
+          placeholder="Add a comment... (Markdown supported)"
+          className="flex-1 px-3 py-2 border rounded-md text-sm min-h-[80px] resize-y"
         />
         <button
           type="button"
           onClick={handleSubmit}
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center gap-2"
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center gap-2 h-fit"
         >
           <Send size={16} />
           Send

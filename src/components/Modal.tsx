@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Edit2 } from 'lucide-react';
+import { ArrowLeft, Edit2, X } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ export function Modal({ isOpen, onClose, title, children, onEdit, isEditing }: M
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -23,37 +23,29 @@ export function Modal({ isOpen, onClose, title, children, onEdit, isEditing }: M
       }}
     >
       <div 
-        className="w-full max-w-3xl h-[90vh] bg-white rounded-lg shadow-xl flex flex-col"
+        className="w-full max-w-3xl bg-white rounded-xl shadow-xl flex flex-col max-h-[90vh]"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between gap-4 border-b px-6 py-4 bg-white rounded-t-lg">
+        <div className="flex items-center justify-between gap-4 border-b px-6 py-4">
           <div className="flex items-center gap-4">
             <button
-              onMouseDown={(e) => {
-                e.stopPropagation();
-                onClose();
-              }}
-              className="p-2 hover:bg-gray-100 rounded-lg text-gray-600"
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-lg text-gray-600 transition-colors"
             >
-              <ArrowLeft size={20} />
+              {isEditing ? <X size={20} /> : <ArrowLeft size={20} />}
             </button>
             {title && <h2 className="text-xl font-semibold">{title}</h2>}
           </div>
           {onEdit && !isEditing && (
             <button
-              onMouseDown={(e) => {
-                e.stopPropagation();
-                onEdit();
-              }}
-              className="flex items-center gap-2 px-3 py-1.5 text-sm bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100"
+              onClick={onEdit}
+              className="btn btn-secondary flex items-center gap-2"
             >
               <Edit2 size={16} /> Edit
             </button>
           )}
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {children}
         </div>
