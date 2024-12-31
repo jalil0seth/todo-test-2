@@ -5,12 +5,11 @@ import { TaskStats } from './TaskStats';
 interface LayoutProps {
   children: React.ReactNode;
 }
-
 export function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen bg-[#f6f6ef]">
       <header className="bg-gradient-to-r from-[#ff6600] to-[#ff8533] px-4 py-2 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <h1 className="text-base font-bold text-white">Task Manager</h1>
             <nav className="flex gap-6">
@@ -27,7 +26,7 @@ export function Layout({ children }: LayoutProps) {
         </div>
       </header>
       
-      <div className="max-w-7xl mx-auto grid grid-cols-[280px_1fr_250px] gap-6 p-4">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-[350px_1fr_280px] gap-6 p-4">
         <aside className="sticky top-20 h-[calc(100vh-5rem)]">
           <div className="bg-white rounded-lg shadow-sm h-full overflow-hidden">
             <ChatBot />

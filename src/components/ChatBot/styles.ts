@@ -1,11 +1,4 @@
 export const chatStyles = {
-  message: {
-    base: 'max-w-[80%] p-3 rounded-lg shadow-sm',
-    bot: 'bg-gradient-to-r from-[#f6f6ef] to-white text-gray-800 font-droid text-sm',
-    user: 'bg-gradient-to-r from-[#ff6600] to-[#ff8533] text-white text-sm font-droid'
-  },
-  container: 'flex flex-col h-full bg-[#f6f6ef]',
-  messageList: 'flex-1 overflow-auto p-4 space-y-4',
   input: {
     container: 'p-4 border-t bg-white',
     wrapper: 'flex gap-2',

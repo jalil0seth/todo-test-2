@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Task } from '../types/task';
-import { Save, X, FileText, ListChecks, MessageSquare } from 'lucide-react';
+import { Save, X, FileText, ListChecks, MessageSquare, Edit2 } from 'lucide-react';
 import { MarkdownPreview } from './MarkdownPreview';
 import { PrioritySelect } from './PrioritySelect';
 import { TimeFrameSelect } from './TimeFrameSelect';
@@ -13,17 +13,12 @@ interface TaskEditorProps {
   task: Task;
   onSave: (updatedTask: Task) => void;
   onCancel: () => void;
-  showPreview?: boolean;
 }
 
-export function TaskEditor({ 
-  task, 
-  onSave, 
-  onCancel,
-  showPreview = true
-}: TaskEditorProps) {
+export function TaskEditor({ task, onSave, onCancel }: TaskEditorProps) {
   const [editedTask, setEditedTask] = useState(task);
   const [activeTab, setActiveTab] = useState('details');
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,18 +64,29 @@ export function TaskEditor({
       >
         {activeTab === 'details' && (
           <div className="space-y-2">
-            <label className="text-sm text-gray-600">Description (Markdown)</label>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-gray-600">Description (Markdown)</label>
+              <button
+                type="button"
+                onClick={() => setIsEditing(!isEditing)}
+                className="text-sm text-[#ff6600] hover:text-[#ff7711] flex items-center gap-1"
+              >
+                <Edit2 size={14} />
+                {isEditing ? 'Preview' : 'Edit'}
+              </button>
+            </div>
+            {isEditing ? (
               <textarea
                 value={editedTask.description}
                 onChange={(e) => setEditedTask({ ...editedTask, description: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-[#ff6600]/20 focus:border-[#ff6600] min-h-[200px] text-sm font-mono"
                 placeholder="Task description (markdown supported)"
               />
-              <div className="min-h-[200px] p-3 border rounded-lg bg-gray-50">
+            ) : (
+              <div className="min-h-[200px] p-4 border rounded-lg bg-gray-50">
                 <MarkdownPreview content={editedTask.description} />
               </div>
-            </div>
+            )}
           </div>
         )}
         {activeTab === 'subtasks' && (

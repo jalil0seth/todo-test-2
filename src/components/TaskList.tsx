@@ -5,11 +5,13 @@ import { createEmptyTask } from '../utils/taskUtils';
 import { DraggableTaskList } from './task/DraggableTaskList';
 import { TaskListHeader } from './task/TaskListHeader';
 import { TaskEditor } from './TaskEditor';
+import { MarkdownPreview } from './MarkdownPreview';
 
 export function TaskList() {
   const { filteredTasks, addTask, updateTask, reorderTasks, filterByTimeFrame } = useTaskContext();
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   // Set default filter to 'today' on component mount
   useEffect(() => {
