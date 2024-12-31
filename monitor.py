@@ -86,7 +86,7 @@ class ZipHandler(FileSystemEventHandler):
         gitignore_path = os.path.join(self.root_path, '.gitignore')
         if not os.path.exists(gitignore_path):
             with open(gitignore_path, 'w') as f:
-                f.write("archive/\n*.zip\nmonitor.py")
+                f.write("archive/\n*.zip\nmonitor.py\n.bolt\n*.DS_Store")
 
     def is_zip_file(self, path):
         return path.endswith('.zip')
