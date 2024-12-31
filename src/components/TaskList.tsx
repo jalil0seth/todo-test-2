@@ -14,22 +14,19 @@ export function TaskList() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Task Manager</h1>
+        <SearchBar />
         <button
           onClick={() => setIsAddingTask(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          className="btn btn-primary"
         >
-          <PlusCircle size={20} /> Add Task
+          <PlusCircle size={18} /> Task
         </button>
       </div>
 
-      <SearchBar />
-
       {isAddingTask && (
-        <div className="mb-8 p-6 bg-white rounded-lg shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
+        <div className="p-5 bg-white rounded-lg shadow-sm">
           <TaskEditor
             task={{ ...createEmptyTask(), id: '', createdAt: new Date() }}
             onSave={(task) => {
@@ -41,12 +38,11 @@ export function TaskList() {
         </div>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {filteredTasks.map(task => (
           <React.Fragment key={task.id}>
             {editingTask?.id === task.id ? (
-              <div className="p-6 bg-white rounded-lg shadow-sm">
-                <h2 className="text-xl font-semibold mb-4">Edit Task</h2>
+              <div className="p-5 bg-white rounded-lg shadow-sm">
                 <TaskEditor
                   task={editingTask}
                   onSave={(updatedTask) => {
@@ -66,7 +62,7 @@ export function TaskList() {
           </React.Fragment>
         ))}
         {filteredTasks.length === 0 && (
-          <p className="text-center text-gray-500 py-8">
+          <p className="text-center text-sm text-gray-500 py-6">
             No tasks found
           </p>
         )}

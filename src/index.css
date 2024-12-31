@@ -29,26 +29,94 @@
   font-size: 1.1rem;
 }
 
+/* Enhanced Button Styles */
 .btn {
-  @apply px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200;
+  @apply px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-sm;
 }
 
 .btn-primary {
-  @apply bg-[#ff6600] text-white hover:bg-[#ff7711] active:bg-[#ff5500];
+  @apply bg-gradient-to-r from-[#ff6600] to-[#ff8533] text-white hover:from-[#ff7711] hover:to-[#ff944d] active:from-[#ff5500] active:to-[#ff7733] shadow-orange-100;
 }
 
 .btn-secondary {
-  @apply bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300;
+  @apply bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 hover:from-gray-100 hover:to-gray-200 active:from-gray-200 active:to-gray-300 shadow-gray-100;
 }
 
+/* Enhanced Input Styles */
 .input {
-  @apply px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-[#ff6600] focus:border-[#ff6600] outline-none transition-all duration-200;
+  @apply px-4 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-[#ff6600]/20 focus:border-[#ff6600] outline-none transition-all duration-200 shadow-sm;
 }
 
+/* Enhanced Modal Styles */
 .modal {
-  @apply bg-white rounded-xl shadow-xl border border-gray-200;
+  @apply bg-white rounded-xl shadow-xl border border-gray-100;
 }
 
+/* Enhanced Card Styles */
 .card {
-  @apply bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200;
+  @apply bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200;
+}
+
+/* Task Item Hover Effects */
+.task-item {
+  @apply transform transition-all duration-200 hover:scale-[1.01] hover:shadow-lg;
+}
+
+/* Enhanced Form Controls */
+.form-control {
+  @apply space-y-2;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700;
+}
+
+.form-input {
+  @apply w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-[#ff6600]/20 focus:border-[#ff6600] outline-none transition-all duration-200;
+}
+
+/* Task Priority Colors */
+.priority-low {
+  @apply bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700;
+}
+
+.priority-medium {
+  @apply bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700;
+}
+
+.priority-high {
+  @apply bg-gradient-to-r from-red-50 to-red-100 text-red-700;
+}
+
+/* Enhanced Tag Styles */
+.tag {
+  @apply px-2.5 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-[#ff6600]/10 to-[#ff8533]/10 text-[#ff6600] hover:from-[#ff6600]/20 hover:to-[#ff8533]/20 transition-all duration-200;
+}
+
+/* Chat Bot Enhancement */
+.chat-message {
+  @apply max-w-[80%] p-4 rounded-2xl shadow-sm transition-all duration-200;
+}
+
+.chat-message-bot {
+  @apply bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800;
+}
+
+.chat-message-user {
+  @apply bg-gradient-to-r from-[#ff6600] to-[#ff8533] text-white;
+}
+
+/* Task Stats Enhancement */
+.stat-card {
+  @apply p-4 rounded-xl bg-gradient-to-r from-white to-gray-50 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200;
+}
+
+/* Subtask Progress Enhancement */
+.progress-bar {
+  @apply h-2 rounded-full bg-gradient-to-r from-[#ff6600] to-[#ff8533] transition-all duration-200;
+}
+
+/* Modal Header Enhancement */
+.modal-header {
+  @apply bg-gradient-to-r from-gray-50 to-white border-b border-gray-100 px-6 py-4;
 }

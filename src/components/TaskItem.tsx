@@ -18,7 +18,7 @@ export function TaskItem({ task, onClick, onToggleComplete }: TaskItemProps) {
   return (
     <div
       onClick={onClick}
-      className="p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-pointer group"
+      className="task-item p-4 bg-white border border-gray-100 rounded-lg cursor-pointer"
     >
       <div className="flex items-start gap-3">
         <button
@@ -26,7 +26,7 @@ export function TaskItem({ task, onClick, onToggleComplete }: TaskItemProps) {
             e.stopPropagation();
             onToggleComplete();
           }}
-          className="mt-1"
+          className="mt-1 transition-transform hover:scale-110"
         >
           {task.completed ? (
             <CheckCircle size={20} className="text-[#ff6600]" />
@@ -41,31 +41,33 @@ export function TaskItem({ task, onClick, onToggleComplete }: TaskItemProps) {
           )}>
             {task.title}
           </h3>
-          <div className="flex flex-wrap gap-3 items-center text-sm text-gray-600">
+          <div className="flex flex-wrap gap-3 items-center text-sm">
             <span className={clsx(
-              'px-2 py-1 rounded-md font-medium',
-              priorityColors[task.priority]
+              'px-3 py-1 rounded-full font-medium transition-all duration-200',
+              `priority-${task.priority}`
             )}>
               {task.priority}
             </span>
-            <span className="flex items-center gap-1">
-              <Calendar size={16} className="text-gray-400" />
+            <span className="flex items-center gap-1.5 text-gray-600">
+              <Calendar size={16} className="text-[#ff6600]" />
               {task.timeFrame}
             </span>
             {(task.comments?.length ?? 0) > 0 && (
-              <span className="flex items-center gap-1">
-                <MessageSquare size={16} className="text-gray-400" />
+              <span className="flex items-center gap-1.5 text-gray-600">
+                <MessageSquare size={16} className="text-[#ff6600]" />
                 {task.comments?.length}
               </span>
             )}
             {subtasks.length > 0 && (
-              <span className="flex items-center gap-1">
-                <ListChecks size={16} className="text-gray-400" />
+              <span className="flex items-center gap-1.5 text-gray-600">
+                <ListChecks size={16} className="text-[#ff6600]" />
                 {completedSubtasks}/{subtasks.length}
               </span>
             )}
             {task.tags?.map(tag => (
-              <span key={tag} className="text-[#ff6600]">#{tag}</span>
+              <span key={tag} className="tag">
+                #{tag}
+              </span>
             ))}
           </div>
         </div>

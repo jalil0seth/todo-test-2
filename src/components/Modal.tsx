@@ -15,7 +15,7 @@ export function Modal({ isOpen, onClose, title, children, onEdit, isEditing }: M
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -23,10 +23,10 @@ export function Modal({ isOpen, onClose, title, children, onEdit, isEditing }: M
       }}
     >
       <div 
-        className="w-full max-w-3xl bg-white rounded-xl shadow-xl flex flex-col max-h-[90vh]"
+        className="w-full max-w-3xl bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] transform transition-all duration-200 scale-100"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between gap-4 border-b px-6 py-4">
+        <div className="modal-header flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <button
               onClick={onClose}
@@ -34,12 +34,12 @@ export function Modal({ isOpen, onClose, title, children, onEdit, isEditing }: M
             >
               {isEditing ? <X size={20} /> : <ArrowLeft size={20} />}
             </button>
-            {title && <h2 className="text-xl font-semibold">{title}</h2>}
+            {title && <h2 className="text-xl font-semibold bg-gradient-to-r from-[#ff6600] to-[#ff8533] bg-clip-text text-transparent">{title}</h2>}
           </div>
           {onEdit && !isEditing && (
             <button
               onClick={onEdit}
-              className="btn btn-secondary flex items-center gap-2"
+              className="btn btn-secondary"
             >
               <Edit2 size={16} /> Edit
             </button>
