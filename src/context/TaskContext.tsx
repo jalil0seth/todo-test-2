@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Task, TimeFrame } from '../types/task';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { sortTasksByPriority } from '../utils/taskSorting';
 
 interface TaskContextType {
   tasks: Task[];
@@ -10,6 +11,7 @@ interface TaskContextType {
   filterByTimeFrame: (timeFrame: TimeFrame) => void;
   searchTasks: (query: string) => void;
   filteredTasks: Task[];
+  reorderTasks: (startIndex: number, endIndex: number) => void;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -25,15 +27,25 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       id: crypto.randomUUID(),
       createdAt: new Date(),
     };
-    setTasks([...tasks, newTask]);
+    setTasks(prevTasks => sortTasksByPriority([...prevTasks, newTask]));
   };
 
   const updateTask = (task: Task) => {
-    setTasks(tasks.map(t => t.id === task.id ? task : t));
+    setTasks(prevTasks => {
+      const updatedTasks = prevTasks.map(t => t.id === task.id ? task : t);
+      return sortTasksByPriority(updatedTasks);
+    });
   };
 
   const deleteTask = (id: string) => {
     setTasks(tasks.filter(t => t.id !== id));
+  };
+
+  const reorderTasks = (startIndex: number, endIndex: number) => {
+    const result = Array.from(tasks);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    setTasks(result);
   };
 
   const filterByTimeFrame = (timeFrame: TimeFrame) => {
@@ -64,6 +76,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       filterByTimeFrame,
       searchTasks,
       filteredTasks,
+      reorderTasks,
     }}>
       {children}
     </TaskContext.Provider>
