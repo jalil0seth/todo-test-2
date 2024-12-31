@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Subtask } from '../types/task';
+import { Subtask } from '../../types/task';
 import { Plus, Trash2, CheckCircle, Circle } from 'lucide-react';
 import { SubtaskProgress } from './SubtaskProgress';
 import { SubtaskEditor } from './SubtaskEditor';

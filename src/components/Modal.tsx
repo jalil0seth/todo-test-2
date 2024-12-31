@@ -1,26 +1,32 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  title?: string;
   children: React.ReactNode;
 }
 
-export function Modal({ isOpen, onClose, children }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative min-h-screen flex items-center justify-center p-4">
-        <div className="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+    <div className="fixed inset-0 z-50 bg-white">
+      <div className="h-full flex flex-col">
+        {/* Header */}
+        <div className="flex items-center gap-4 border-b px-6 py-4 bg-white">
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+            className="p-2 hover:bg-gray-100 rounded-lg text-gray-600"
           >
-            <X size={24} />
+            <ArrowLeft size={20} />
           </button>
+          {title && <h2 className="text-xl font-semibold">{title}</h2>}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto px-6 py-4">
           {children}
         </div>
       </div>
