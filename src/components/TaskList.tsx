@@ -6,11 +6,12 @@ import { SearchBar } from './SearchBar';
 import { PlusCircle } from 'lucide-react';
 import { createEmptyTask } from '../utils/taskUtils';
 import { TaskEditor } from './TaskEditor';
+import { Task } from '../types/task';
 
 export function TaskList() {
   const { filteredTasks, addTask, updateTask, deleteTask } = useTaskContext();
   const [isAddingTask, setIsAddingTask] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   return (
     <div className="space-y-6">
@@ -42,12 +43,27 @@ export function TaskList() {
 
       <div className="space-y-4">
         {filteredTasks.map(task => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            onClick={() => setSelectedTask(task)}
-            onToggleComplete={() => updateTask({ ...task, completed: !task.completed })}
-          />
+          <React.Fragment key={task.id}>
+            {editingTask?.id === task.id ? (
+              <div className="p-6 bg-white rounded-lg shadow-sm">
+                <h2 className="text-xl font-semibold mb-4">Edit Task</h2>
+                <TaskEditor
+                  task={editingTask}
+                  onSave={(updatedTask) => {
+                    updateTask(updatedTask);
+                    setEditingTask(null);
+                  }}
+                  onCancel={() => setEditingTask(null)}
+                />
+              </div>
+            ) : (
+              <TaskItem
+                task={task}
+                onClick={() => setEditingTask(task)}
+                onToggleComplete={() => updateTask({ ...task, completed: !task.completed })}
+              />
+            )}
+          </React.Fragment>
         ))}
         {filteredTasks.length === 0 && (
           <p className="text-center text-gray-500 py-8">
@@ -55,22 +71,6 @@ export function TaskList() {
           </p>
         )}
       </div>
-
-      {selectedTask && (
-        <TaskModal
-          task={selectedTask}
-          isOpen={true}
-          onClose={() => setSelectedTask(null)}
-          onUpdate={(updatedTask) => {
-            updateTask(updatedTask);
-            setSelectedTask(null);
-          }}
-          onArchive={(taskId) => {
-            updateTask({ ...selectedTask, timeFrame: 'archived' });
-            setSelectedTask(null);
-          }}
-        />
-      )}
     </div>
   );
 }

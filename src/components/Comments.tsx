@@ -11,12 +11,23 @@ interface CommentsProps {
 export function Comments({ comments, onAddComment }: CommentsProps) {
   const [newComment, setNewComment] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (newComment.trim()) {
       onAddComment(newComment);
       setNewComment('');
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (newComment.trim()) {
+        onAddComment(newComment);
+        setNewComment('');
+      }
     }
   };
 
@@ -33,7 +44,7 @@ export function Comments({ comments, onAddComment }: CommentsProps) {
           </div>
         ))}
       </div>
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      <div className="flex gap-2">
         <input
           type="text"
           value={newComment}
@@ -41,19 +52,20 @@ export function Comments({ comments, onAddComment }: CommentsProps) {
             e.stopPropagation();
             setNewComment(e.target.value);
           }}
+          onKeyDown={handleKeyDown}
           onClick={e => e.stopPropagation()}
           placeholder="Add a comment..."
           className="flex-1 px-3 py-2 border rounded-md"
         />
         <button
-          type="submit"
-          onClick={e => e.stopPropagation()}
+          type="button"
+          onClick={handleSubmit}
           className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center gap-2"
         >
           <Send size={16} />
           Send
         </button>
-      </form>
+      </div>
     </div>
   );
 }
