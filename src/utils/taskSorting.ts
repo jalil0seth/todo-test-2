@@ -8,11 +8,18 @@ const priorityOrder = {
 
 export const sortTasksByPriority = (tasks: Task[]): Task[] => {
   return [...tasks].sort((a, b) => {
-    const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
-    if (priorityDiff === 0) {
-      // If priorities are equal, sort by creation date (newest first)
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    // First sort by completion status
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1; // Completed tasks go to the bottom
     }
-    return priorityDiff;
+    
+    // Then sort by priority
+    const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+    if (priorityDiff !== 0) {
+      return priorityDiff;
+    }
+    
+    // Finally sort by creation date (newest first)
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 };

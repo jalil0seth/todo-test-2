@@ -14,10 +14,10 @@ import {
 import { clsx } from 'clsx';
 import { calculateSubtaskProgress } from '../utils/taskUtils';
 
-const priorityIcons = {
-  high: <AlertOctagon size={14} />,
-  medium: <AlertTriangle size={14} />,
-  low: <AlertCircle size={14} />
+const priorityStyles = {
+  high: 'bg-red-50 text-red-700',
+  medium: 'bg-orange-50 text-orange-700',
+  low: 'bg-blue-50 text-blue-700'
 };
 
 interface TaskItemProps {
@@ -33,7 +33,7 @@ export function TaskItem({ task, onClick, onToggleComplete }: TaskItemProps) {
   return (
     <div
       onClick={onClick}
-      className="group task-item p-4 bg-white border border-gray-100 rounded-lg cursor-pointer"
+      className="group task-item p-4 bg-white border border-gray-100 rounded-lg cursor-pointer hover:border-gray-200"
     >
       <div className="flex items-start gap-3">
         <div className="flex items-center gap-2">
@@ -60,8 +60,14 @@ export function TaskItem({ task, onClick, onToggleComplete }: TaskItemProps) {
             {task.title}
           </h3>
           <div className="flex flex-wrap gap-3 items-center text-sm">
-            <span className={`priority-${task.priority}`}>
-              {priorityIcons[task.priority]} {task.priority}
+            <span className={clsx(
+              'px-2 py-1 rounded-full flex items-center gap-1.5',
+              priorityStyles[task.priority]
+            )}>
+              {task.priority === 'high' && <AlertOctagon size={14} />}
+              {task.priority === 'medium' && <AlertTriangle size={14} />}
+              {task.priority === 'low' && <AlertCircle size={14} />}
+              {task.priority}
             </span>
             <span className="flex items-center gap-1.5 text-gray-600">
               <Calendar size={16} className="text-[#ff6600]" />
@@ -80,7 +86,7 @@ export function TaskItem({ task, onClick, onToggleComplete }: TaskItemProps) {
               </span>
             )}
             {task.tags?.map(tag => (
-              <span key={tag} className="tag">
+              <span key={tag} className="tag bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
                 #{tag}
               </span>
             ))}

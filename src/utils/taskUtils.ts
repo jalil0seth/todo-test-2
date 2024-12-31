@@ -12,7 +12,7 @@ export const calculateSubtaskProgress = (subtasks: Task['subtasks'] = []) => {
   return Math.round((completedSubtasks / subtasks.length) * 100);
 };
 
-export const createEmptyTask = (): Omit<Task, 'id' | 'createdAt'> => ({
+export const createEmptyTask = (): Omit<Task, 'id' | 'createdAt' | 'order'> => ({
   title: '',
   description: '',
   priority: 'medium' as Priority,

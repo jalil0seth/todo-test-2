@@ -1,5 +1,6 @@
 export type Priority = 'low' | 'medium' | 'high';
 export type TimeFrame = 'today' | 'tomorrow' | 'future' | 'archived';
+export type TaskStatus = 'active' | 'archived';
 
 export interface Comment {
   id: string;
@@ -24,4 +25,7 @@ export interface Task {
   comments: Comment[];
   subtasks: Subtask[];
   tags: string[];
+  order: number;
+  rank: number;
+  status: TaskStatus;
 }
