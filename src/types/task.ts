@@ -23,4 +23,5 @@ export interface Task {
   createdAt: Date;
   comments: Comment[];
   subtasks: Subtask[];
+  tags: string[];
 }

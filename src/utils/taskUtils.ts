@@ -19,5 +19,6 @@ export const createEmptyTask = (): Omit<Task, 'id' | 'createdAt'> => ({
   timeFrame: 'today',
   completed: false,
   comments: [],
-  subtasks: []
+  subtasks: [],
+  tags: []
 });

@@ -13,7 +13,7 @@ from datetime import datetime
 
 # Load environment variables
 load_dotenv()
-PROJECT_NAME = 'todo-test2'
+PROJECT_NAME = 'todo-test-2'
 
 class Spinner:
     def __init__(self):

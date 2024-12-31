@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Task, Subtask } from '../types/task';
-import ReactMarkdown from 'react-markdown';
+import { Task } from '../types/task';
 import { Modal } from './Modal';
 import { Comments } from './Comments';
 import { SubtaskList } from './SubtaskList';
 import { TaskEditor } from './TaskEditor';
+import { TagInput } from './TagInput';
+import { TabView } from './TabView';
 import { format } from 'date-fns';
-import { CheckCircle, Circle, Edit2, Archive } from 'lucide-react';
+import { CheckCircle, Circle, Edit2, Archive, ListChecks, MessageSquare, Hash, FileText } from 'lucide-react';
 import { clsx } from 'clsx';
+import { priorityColors } from '../utils/taskUtils';
 
 interface TaskModalProps {
   task: Task | null;
@@ -19,33 +21,21 @@ interface TaskModalProps {
 
 export function TaskModal({ task, isOpen, onClose, onUpdate, onArchive }: TaskModalProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
+  const [activeTab, setActiveTab] = useState('details');
 
   if (!task) return null;
 
-  const priorityColors = {
-    low: 'bg-blue-100 text-blue-800',
-    medium: 'bg-yellow-100 text-yellow-800',
-    high: 'bg-red-100 text-red-800'
-  };
-
-  const handleAddSubtask = () => {
-    if (newSubtaskTitle.trim()) {
-      onUpdate({
-        ...task,
-        subtasks: [
-          ...task.subtasks,
-          { id: crypto.randomUUID(), title: newSubtaskTitle.trim(), completed: false }
-        ]
-      });
-      setNewSubtaskTitle('');
-    }
+  const handleAddSubtask = (title: string) => {
+    onUpdate({
+      ...task,
+      subtasks: [...(task.subtasks || []), { id: crypto.randomUUID(), title, completed: false }]
+    });
   };
 
   const handleToggleSubtask = (subtaskId: string) => {
     onUpdate({
       ...task,
-      subtasks: task.subtasks.map(st =>
+      subtasks: (task.subtasks || []).map(st =>
         st.id === subtaskId ? { ...st, completed: !st.completed } : st
       )
     });
@@ -54,19 +44,29 @@ export function TaskModal({ task, isOpen, onClose, onUpdate, onArchive }: TaskMo
   const handleDeleteSubtask = (subtaskId: string) => {
     onUpdate({
       ...task,
-      subtasks: task.subtasks.filter(st => st.id !== subtaskId)
+      subtasks: (task.subtasks || []).filter(st => st.id !== subtaskId)
     });
   };
 
   const handleAddComment = (content: string) => {
     onUpdate({
       ...task,
-      comments: [
-        ...task.comments,
-        { id: crypto.randomUUID(), content, createdAt: new Date() }
-      ]
+      comments: [...(task.comments || []), { id: crypto.randomUUID(), content, createdAt: new Date() }]
     });
   };
+
+  const handleUpdateTags = (tags: string[]) => {
+    onUpdate({
+      ...task,
+      tags
+    });
+  };
+
+  const tabs = [
+    { id: 'details', label: 'Details', icon: <FileText size={18} /> },
+    { id: 'subtasks', label: 'Subtasks', icon: <ListChecks size={18} /> },
+    { id: 'comments', label: 'Comments', icon: <MessageSquare size={18} /> },
+  ];
 
   if (isEditing) {
     return (
@@ -87,7 +87,23 @@ export function TaskModal({ task, isOpen, onClose, onUpdate, onArchive }: TaskMo
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="space-y-6">
         <div className="flex items-start justify-between">
-          <h2 className="text-2xl font-bold">{task.title}</h2>
+          <div>
+            <h2 className="text-2xl font-bold">{task.title}</h2>
+            <div className="flex gap-2 mt-2">
+              <span className={clsx(
+                'px-2 py-1 rounded-full text-xs font-medium',
+                priorityColors[task.priority]
+              )}>
+                {task.priority}
+              </span>
+              <span className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-800">
+                {task.timeFrame}
+              </span>
+              <span className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-800">
+                Created {format(new Date(task.createdAt), 'MMM d, yyyy')}
+              </span>
+            </div>
+          </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsEditing(true)}
@@ -115,47 +131,29 @@ export function TaskModal({ task, isOpen, onClose, onUpdate, onArchive }: TaskMo
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <span className={clsx(
-            'px-2 py-1 rounded-full text-xs font-medium',
-            priorityColors[task.priority]
-          )}>
-            {task.priority}
-          </span>
-          <span className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-800">
-            {task.timeFrame}
-          </span>
-          <span className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-800">
-            Created {format(new Date(task.createdAt), 'MMM d, yyyy')}
-          </span>
-        </div>
+        <TagInput tags={task.tags || []} onChange={handleUpdateTags} />
 
-        <div className="prose prose-sm max-w-none">
-          <ReactMarkdown>{task.description}</ReactMarkdown>
-        </div>
-
-        <SubtaskList
-          subtasks={task.subtasks}
-          onAdd={() => {
-            const title = window.prompt('Enter subtask title:');
-            if (title) {
-              onUpdate({
-                ...task,
-                subtasks: [
-                  ...task.subtasks,
-                  { id: crypto.randomUUID(), title, completed: false }
-                ]
-              });
-            }
-          }}
-          onToggle={handleToggleSubtask}
-          onDelete={handleDeleteSubtask}
-        />
-
-        <Comments
-          comments={task.comments}
-          onAddComment={handleAddComment}
-        />
+        <TabView tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab}>
+          {activeTab === 'details' && (
+            <div className="prose prose-sm max-w-none">
+              <ReactMarkdown>{task.description}</ReactMarkdown>
+            </div>
+          )}
+          {activeTab === 'subtasks' && (
+            <SubtaskList
+              subtasks={task.subtasks || []}
+              onAdd={handleAddSubtask}
+              onToggle={handleToggleSubtask}
+              onDelete={handleDeleteSubtask}
+            />
+          )}
+          {activeTab === 'comments' && (
+            <Comments
+              comments={task.comments || []}
+              onAddComment={handleAddComment}
+            />
+          )}
+        </TabView>
       </div>
     </Modal>
   );
